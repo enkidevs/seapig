@@ -10,6 +10,20 @@ Your friendly neighborhood `seapig` is here to help you maintain consistent rend
 
 Good ol' `seapig` restricts this consistent shape by enforcing [**Rendering Order**](#RenderingOrder) and [**Child Presence**](#ChildPresence):
 
+The main idea is to promote a cleaner rendering structure
+by requiring components that can (or must) be rendered together to be provided externally as children rather than passing them as props:
+
+```jsx
+/* No more need for this */
+<Button label={<span>Click Me</span>} icon={<i className="fa" />} />
+
+/* Now we can have this */
+<Button>
+  <i className="fa" icon />
+  <span>Click Me</span>
+</Button>
+```
+
 ### <a name="RenderingOrder">Rendering Order</a>
 
 Children are rendered into special placeholders determined by the provided props. This means that the rendering shape is enforced internally, allowing us to pass the children into a `seapig` component in any order.
