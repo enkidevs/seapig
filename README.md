@@ -48,7 +48,7 @@ Children are rendered into special placeholders determined by the provided props
 </Main>
 
 /* Corresponding seapig component */
-import seapig, { DEFAULT_CHILD } from 'seapig'
+import seapig from 'seapig'
 
 const Main = props => {
   const {
@@ -134,7 +134,7 @@ npm install seapig --save
 
 ```jsx
 import React, { Component } from 'react'
-import cpig from 'seapig'
+import seapig from 'seapig'
 
 /* Button with a required label and an optional icon */
 class Button extends Component {
@@ -142,7 +142,7 @@ class Button extends Component {
     const {
       icon,
       label
-    } = cpig(this.props.children, {
+    } = seapig(this.props.children, {
       optional: ['icon'],
       required: ['label']
     })
