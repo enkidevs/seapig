@@ -12,10 +12,10 @@ Good ol' `seapig` restricts this consistent shape by enforcing [**Rendering Orde
 
 ### <a name="RenderingOrder">Rendering Order</a>
 
-Children are rendered into special placeholders determined by the provided props. This means that the rendering shape is enforced internally, allowing us to pass the children in any order from the outside.
+Children are rendered into special placeholders determined by the provided props. This means that the rendering shape is enforced internally, allowing us to pass the children into a `seapig` component in any order.
 
 ```jsx
-/* `MyCoolSidebar` and `Content` are always rendered in the same order no matter the order they are passed in */
+/* `MyCoolSidebar` and `Content` are always rendered in the same order no matter what order they are passed in */
 
 /* This one would render the same */
 <Main>
@@ -58,7 +58,7 @@ const Main = props => {
 
 A `seapig` component ensures that all children identified by the required props are passed in.
 
-If we use `<Main>` from above without identifying it's children as the required `'content'` and `'sidebar'` component, `seapig` would throw:
+To reuse `<Main>` from above as an example, if we didn't pass one or more of its children with the required props (`'content'` or `'sidebar'`), `seapig` would throw:
 
 ```jsx
 // The code bellow would throw a "Missing required prop `sidebar`" error
@@ -69,7 +69,7 @@ If we use `<Main>` from above without identifying it's children as the required 
 </Main>
 ```
 
-The `seapig` als ensures that there are no rogue un-identified children, unless we tell it explicitly that we are expecting a single child without an identifying prop.
+The `seapig` also ensures that there are no rogue unidentified children, unless we tell it explicitly that we are expecting a single child without an identifying prop.
 
 ```jsx
 import seapig, { DEFAULT_CHILD } from 'seapig'
@@ -80,7 +80,7 @@ const Main = props => {
     content,
     [DEFAULT_CHILD]: thirdChild
   } = seapig(props.children, {
-    optional: DEFAULT_CHILD // <-- tell seapig we're expacting an undentified child
+    optional: DEFAULT_CHILD // <-- tell seapig we're expecting an unidentified child
     required: ['sidebar', 'content']
   })
 
@@ -94,7 +94,7 @@ const Main = props => {
   )
 }
 
-/* Allowing us to not need to specify an identifying prop on one of the children */
+/* Allows us to not need to specify an identifying prop on one of the children */
 <Main>
   <Content content>
     <h2>Hello `seapig`!</h2>
@@ -116,7 +116,7 @@ npm install seapig --save
 
 ## Example
 
-1. `seapig` button with a require label and an optional icon
+### `seapig` button with a required label and an optional icon:
 
 ```jsx
 import React, { Component } from 'react'
