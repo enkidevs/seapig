@@ -103,7 +103,7 @@ const Main = props => {
     <div>
       <aside>{sidebar}</aside>
       <section>{content}</section>
-      <section>thirdChild</section>
+      <section>{thirdChild}</section>
     </div>
   )
 }
@@ -165,7 +165,7 @@ class Form extends Component {
     return (
       <div>
         <Button>
-          <i className="fa fa-upload"></i>
+          <i className="fa fa-upload" icon />
           <span label>Submit</span>
         </Button>
       </div>
