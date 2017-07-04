@@ -127,8 +127,7 @@ class Button extends Component {
   render() {
     const {
       icon,
-      label,
-      [DEFAULT_CHILD]: rightSection
+      label
     } = cpig(this.props.children, {
       optional: ['icon'],
       required: ['label']
@@ -138,7 +137,6 @@ class Button extends Component {
       <button>
         {icon && <span className="pull-left">{icon}</span>}
         {label}
-        {rightSection && <section clasName="pull-right">{rightSection}</section>}
       </button>
     )
   }
@@ -153,9 +151,8 @@ class Form extends Component {
     return (
       <div>
         <Button>
-          <i className="fa fa-cog"></i>
-          <span label>Click Me</span>
-          <a href="https://enki.com">Unidentified Link</a>
+          <i className="fa fa-upload"></i>
+          <span label>Submit</span>
         </Button>
       </div>
     )
