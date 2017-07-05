@@ -36,7 +36,7 @@ export default function seapig(
   }
 
   const foundProps = {};
-  const defaltChildLabel =
+  const defaultChildLabel =
     optional.includes(DEFAULT_CHILD) || required.includes(DEFAULT_CHILD)
       ? DEFAULT_CHILD
       : undefined;
@@ -47,7 +47,7 @@ export default function seapig(
 
     const prop =
       findOneOfThePropsOnTheChild(child, optional, required) ||
-      defaltChildLabel;
+      defaultChildLabel;
 
     if (typeof prop !== 'undefined') {
       assertPropWasNotAlreadyFound(foundProps, prop);
