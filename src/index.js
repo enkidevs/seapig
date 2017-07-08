@@ -86,10 +86,11 @@ function assertSchemaProp (numProp, schemaProp, result, schema) {
   const limit = isValidNum(propSchema[numProp])
     ? propSchema[numProp]
     : defaultSchema[numProp]
+  const invariantMessageEnding = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
   invariant(
     validations[numProp](elementsCount, limit),
     numProp === 'min'
-      ? `Must have at least ${limit} \`${schemaProp}\` elements`
-      : `Cannot have more than ${limit} \`${schemaProp}\` elements`
+      ? `Must have at least ${invariantMessageEnding}`
+      : `Cannot have more than ${invariantMessageEnding}`
   )
 }

@@ -13,11 +13,12 @@ const childrenWithProp = [a, b]
 const childrenWithoutProp = [c, d]
 
 // error messages
+const ERROR_MSG_ENDING_REGEX = `\\d \`${PROP}\` element(?:s|$)?`
 const ERROR_MSG_INVARIANT_MIN = new RegExp(
-  `Must have at least \\d \`${PROP}\` elements`
+  `Must have at least ${ERROR_MSG_ENDING_REGEX}`
 )
 const ERROR_MSG_INVARIANT_MAX = new RegExp(
-  `Cannot have more than \\d \`${PROP}\` elements`
+  `Cannot have more than ${ERROR_MSG_ENDING_REGEX}`
 )
 
 describe('seapig', () => {
