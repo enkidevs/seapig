@@ -49,7 +49,7 @@ export default function seapig (children, schema = {}) {
   )
 
   // build the result
-  Children.forEach(children, child => {
+  Children.toArray(children).forEach(child => {
     if (!child) {
       return
     }
