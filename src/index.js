@@ -2,10 +2,20 @@ import { Children } from 'react'
 import invariant from 'invariant'
 
 export const OPTIONAL = {
+  min: 0,
+  max: 1
+}
+
+export const OPTIONALS = {
   min: 0
 }
 
 export const REQUIRED = {
+  min: 1,
+  max: 1
+}
+
+export const REQUIREDS = {
   min: 1
 }
 
