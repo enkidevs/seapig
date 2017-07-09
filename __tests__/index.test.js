@@ -1,9 +1,10 @@
 /* globals describe test expect */
-import React from 'react'
-import seapig, { OPTIONAL, REQUIRED } from '../src/index'
+import React, { Children } from 'react'
+import seapig, { OPTIONAL, OPTIONALS, REQUIRED, REQUIREDS } from '../src/index'
 
 // test data
 const PROP = 'whatever'
+const SEAPIG_PROP = `${PROP}Children`
 const a = <div whatever />
 const b = <div whatever />
 const c = <div />
@@ -11,6 +12,11 @@ const d = <div />
 const children = [a, b, c, d]
 const childrenWithProp = [a, b]
 const childrenWithoutProp = [c, d]
+const childrenReact = Children.toArray(children)
+const childrenWithSingleChildWithProp = children.slice(1)
+const childrenWithSingleChildWithPropReact = Children.toArray(
+  childrenWithSingleChildWithProp
+)
 
 // error messages
 const ERROR_MSG_ENDING_REGEX = `\\d \`${PROP}\` element(?:s|$)?`
@@ -22,24 +28,46 @@ const ERROR_MSG_INVARIANT_MAX = new RegExp(
 )
 
 describe('seapig', () => {
-  test(`should return array of children matching \`${PROP}\` and an array of the remaining children under \`rest\``, () => {
-    // OPTIONAL
-    expect(
-      seapig(children, {
-        [PROP]: OPTIONAL
+  describe(`should return array of children matching \`${PROP}\` and an array of the remaining children under \`rest\``, () => {
+    test('for OPTIONAL', () => {
+      expect(
+        seapig(childrenWithSingleChildWithProp, {
+          [PROP]: OPTIONAL
+        })
+      ).toEqual({
+        [SEAPIG_PROP]: [childrenWithSingleChildWithPropReact[0]],
+        rest: childrenWithSingleChildWithPropReact.slice(1)
       })
-    ).toEqual({
-      [PROP]: childrenWithProp,
-      rest: childrenWithoutProp
     })
-    // REQUIRED
-    expect(
-      seapig(children, {
-        [PROP]: REQUIRED
+    test('for OPTIONALS', () => {
+      expect(
+        seapig(children, {
+          [PROP]: OPTIONALS
+        })
+      ).toEqual({
+        [SEAPIG_PROP]: childrenReact.slice(0, 2),
+        rest: childrenReact.slice(2)
       })
-    ).toEqual({
-      [PROP]: childrenWithProp,
-      rest: childrenWithoutProp
+    })
+    test('for REQUIRED', () => {
+      expect(
+        seapig(childrenWithSingleChildWithProp, {
+          [PROP]: REQUIRED
+        })
+      ).toEqual({
+        [SEAPIG_PROP]: [childrenWithSingleChildWithPropReact[0]],
+        rest: childrenWithSingleChildWithPropReact.slice(1)
+      })
+    })
+    test('for REQUIREDS', () => {
+      expect(
+        seapig(children, {
+          [PROP]: REQUIREDS
+        })
+      ).toEqual({
+        [SEAPIG_PROP]: childrenReact.slice(0, 2),
+        rest: childrenReact.slice(2)
+      })
     })
   })
 
@@ -69,7 +97,7 @@ describe('seapig', () => {
   })
   test('should return all children as `rest` object for no schema', () => {
     expect(seapig(children)).toEqual({
-      rest: children
+      rest: childrenReact
     })
   })
   test('should return empty array under `rest` for invalid children', () => {

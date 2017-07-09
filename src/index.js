@@ -49,9 +49,9 @@ export default function seapig (children, schema = {}) {
   // extract schema and initialize the result
   const propNames = Object.keys(schema)
   const result = propNames.reduce(
-    (obj, propName) => {
-      obj[propName] = []
-      return obj
+    (r, propName) => {
+      r[convertPropName(propName)] = []
+      return r
     },
     {
       [REST]: []
@@ -64,7 +64,7 @@ export default function seapig (children, schema = {}) {
       return
     }
     const propName = propNames.find(p => child.props[p]) || REST
-    result[propName].push(child)
+    result[propName === REST ? propName : convertPropName(propName)].push(child)
   })
 
   // validate the result
@@ -74,6 +74,10 @@ export default function seapig (children, schema = {}) {
   })
 
   return result
+}
+
+function convertPropName (propName) {
+  return `${propName}Children`
 }
 
 const defaultSchema = {
@@ -91,7 +95,7 @@ const validations = {
 }
 
 function assertSchemaProp (numProp, schemaProp, result, schema) {
-  const elementsCount = result[schemaProp].length
+  const elementsCount = result[convertPropName(schemaProp)].length
   const propSchema = schema[schemaProp]
   const limit = isValidNum(propSchema[numProp])
     ? propSchema[numProp]

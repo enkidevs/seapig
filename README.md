@@ -12,7 +12,7 @@ Good ol' `seapig` restricts this consistent shape by enforcing [**Rendering Orde
 
 The main purpose is to promote a cleaner rendering structure by requiring components that can (or must) be rendered together to be provided externally as children rather than passing them as props:
 
-```js
+```jsx
 /* No more need for this */
 <Button label={<span>Click Me</span>} icon={<i className="fa" />} />
 
@@ -27,9 +27,9 @@ This allows a cleaner JSX layout by decoupling how children are rendered togethe
 
 ### <a name="RenderingOrder">Rendering Order</a>
 
-Components that use `seapig` render their children into special placeholders determined by schema. This means that the rendering shape is enforced internally, allowing us to pass the children into a `seapig` component in any order.
+Components that use `seapig` render their children into special placeholders determined by the schema. This means that the rendering shape is enforced internally, allowing us to pass the children into a `seapig` component in any order.
 
-```js
+```jsx
 /* `MyCoolSidebar` and `Content` are always rendered in the same order no matter what order they are passed in */
 
 /* This one would render the same */
@@ -53,17 +53,17 @@ import seapig, { OPTIONAL, REQUIRED } from 'seapig'
 
 const Main = props => {
   const {
-    sidebar, // <-- array of elements with the `sidebar` prop
-    content  // <-- array of elements with the `content` prop
-  } = seapig(props.children, { // <-- schema object
-    sidebar: OPTIONAL, // <-- sidebar is optional
-    content: REQUIRED  // <-- content is required
+    sidebarChildren, // array of children with the `sidebar` prop
+    contentChildren  // array of children with the `content` prop
+  } = seapig(props.children, { // schema object
+    sidebar: OPTIONAL, // sidebar is optional
+    content: REQUIRED  // content is required
   })
 
   // rendering order is always the same
   return (
     <div>
-      {sidebar && <aside>{sidebar}</aside>}
+      {sidebarChildren.length && <aside>{sidebarChildren}</aside>}
       <section>{content}</section>
     </div>
   )
@@ -76,7 +76,7 @@ A `seapig` component ensures that all children match the provided schema.
 
 To reuse `<Main>` from above as an example, if we didn't pass any children with the `'content'` prop, `seapig` would throw:
 
-```js
+```jsx
 // The code bellow would throw a "Must have at least 1 `content` element" error
 <Main>
   <MyCoolSidebar sidebar />
@@ -85,14 +85,14 @@ To reuse `<Main>` from above as an example, if we didn't pass any children with 
 
 The `seapig` also accumulates any unidentified children into the `rest` property.
 
-```js
+```jsx
 import seapig, { OPTIONAL, REQUIRED } from 'seapig'
 
 const Main = props => {
   const {
-    sidebar,
-    content,
-    rest, // <-- all children not matching `sidebar` and `content` are in this array
+    sidebarChildren,
+    contentChildren,
+    rest, // all children not matching `sidebar` and `content` are in this array
   } = seapig(props.children, {
     sidebar: OPTIONAL,
     content: REQUIRED
@@ -100,9 +100,9 @@ const Main = props => {
 
   return (
     <div>
-      {sidebar && <aside>{sidebar}</aside>}
+      {sidebarChildren.length && <aside>{sidebarChildren}</aside>}
       <section>{content}</section>
-      {rest}
+      {rest} {/* passing rest of the children */}
     </div>
   )
 }
@@ -117,27 +117,35 @@ const Main = props => {
 </Main>
 ```
 
-In fact, `OPTIONAL` and `REQUIRED` are just helpful schema constants:
+In fact, `OPTIONAL` and `REQUIRED`, along with their plural counterparts `OPTIONALS` and `REQUIREDS`, are just helpful schema constants:
 
-```js
-const OPTIONAL = {
+```jsx
+const OPTIONAL = { // can have one
+  min: 0,
+  max: 1
+}
+const OPTIONALS = { // can have any
   min: 0
 }
-const REQUIRED = {
+const REQUIRED = { // must have one
+  min: 1,
+  max: 1
+}
+const REQUIREDS = { // must have at least one
   min: 1
 }
 ```
 
 `seapig` allows us to pass custom `min` and `max`, both inclusive, values as well:
 
-```js
+```jsx
 import seapig from 'seapig'
 
 const Main = props => {
   const {
-    button
+    buttonChildren
   } = seapig(props.children, {
-    button: { // <-- custom button schema values
+    button: { // custom button schema values
       min: 2,
       max: 5
     }
@@ -146,7 +154,7 @@ const Main = props => {
   return (
     <div>
       <h1>I can have between 2 to 5 buttons</h1>
-      {button}
+      {buttonChildren}
     </div>
   )
 }
@@ -173,7 +181,7 @@ npm install seapig --save
 
 ### `seapig` button with a required label and an optional icon:
 
-```js
+```jsx
 import React, { Component } from 'react'
 import seapig, { OPTIONAL, REQUIRED } from 'seapig'
 
@@ -181,8 +189,8 @@ import seapig, { OPTIONAL, REQUIRED } from 'seapig'
 class Button extends Component {
   render() {
     const {
-      icon,
-      label
+      iconChildren,
+      labelChildren
     } = seapig(this.props.children, {
       icon: OPTIONAL,
       label: REQUIRED
@@ -190,7 +198,7 @@ class Button extends Component {
 
     return (
       <button>
-        {icon && <span className="pull-left">{icon}</span>}
+        {icon.length && <span className="pull-left">{icon}</span>}
         {label}
       </button>
     )
@@ -218,15 +226,15 @@ class Form extends Component {
 
 ## API
 
-```js
+```jsx
 const {
-  icon,
-  label,
-  image,
+  iconChildren,
+  labelChildren,
+  imageChildren,
   rest, // array of children not matching any of the schema props
 } = seapig(children, {
   icon: OPTIONAL, // use OPTIONAL to specify an optional child prop
-  label: REQUIRED, // use REQUIRED to specify a required child prop,
+  label: REQUIREDS, // use REQUIREDS to specify at least one required child prop,
   image: { // pass an object with `min` and/or `max`
     min: 1, // default is `0` if only `max` is specified
     max: 2  // default is `Infinity` if only `min` is specified
