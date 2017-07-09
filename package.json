@@ -1,6 +1,6 @@
 {
   "name": "seapig",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Utility to restrict the shape of a React component.",
   "main": "dist/index.js",
   "jsnext:main": "src/index.js",
