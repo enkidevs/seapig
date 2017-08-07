@@ -1,6 +1,6 @@
 # seapig 🌊🐷
 
-![Sea Pig](https://media.giphy.com/media/X2C5xcQLdVGda/giphy.gif)
+[![Sea Pig](https://media.giphy.com/media/X2C5xcQLdVGda/giphy.gif)](https://www.youtube.com/watch?v=_y4DbZivHCY)
 
 > Utility to restrict the shape of a [React](http://facebook.github.io/react/index.html) component.
 
