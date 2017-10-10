@@ -1,7 +1,7 @@
 {
   "name": "seapig",
   "version": "0.3.0",
-  "description": "Utility to restrict the shape of a React component.",
+  "description": "Utility for generalized composition of React components.",
   "main": "dist/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
@@ -24,6 +24,8 @@
   "keywords": [
     "react",
     "react-component",
+    "composition",
+    "compound",
     "validation",
     "props",
     "children",
