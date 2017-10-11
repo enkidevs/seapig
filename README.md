@@ -8,13 +8,14 @@
 
 [Utility for generalized composition of React components](https://www.npmjs.org/package/seapig)
 
+Sea pig stands for (**C**hildren **P**rops **I**nternal **G**etter), except the `C` is spelled phonetically.
+
 ## Table of Contents
 
 -   [What does Seapig do?](#whatdoesseapigdo)
--   [Why Seapig?](#whyseapig)
 -   [Install](#install)
 -   [Example](#example)
--   [Details](#details)
+-   [Walkthrough](#workthrough)
 -   [API](#api)
 -   [License](#license)
 
@@ -51,17 +52,25 @@ A compound component encloses the state and behavior for a group of components b
 
 A concrete example of a compound component on the Web today is the `<select>` element. It allows us to externally specify it's rendering structure with `<option>` and `<optiongroup>` elements but hides away all the complexity of rendering those in a certain way or handling/delegating events.
 
-*If you're interested in more examples of compound components, [Ryan Florence](https://twitter.com/ryanflorence) has a [great talk](https://www.youtube.com/watch?v=hEGg-3pIHlE) on this topic.*
+> If you're interested in more examples of compound components, [Ryan Florence](https://twitter.com/ryanflorence) has a [great talk](https://www.youtube.com/watch?v=hEGg-3pIHlE) on this topic.
 
 Good ol' `seapig` twists the concept of compound components a bit by using designate props to determine distinct parts of our component group, rather than enforcing usage of specific components. Furthermore, it can restrict a consistent shape of our structure by enforcing [**Rendering Order**](#RenderingOrder) and [**Child Presence**](#ChildPresence) using a schema object.
 
-The main purpose is to promote a cleaner rendering structure by requiring components that can (or must) be rendered together to be provided externally as children rather than passing them as props.
+Imagine if `<select>` allowed you to pass anything as its option but still handled all the logic and things like event propagation?
 
-This allows a cleaner JSX layout by decoupling how children are rendered from how they are defined.
+Wouldn't this be cool?
+
+```html
+<select>
+  <span option>Option 1</span>
+  <h3 option>Option 2</span>
+  <div option className="capitalize">Option 3</div>
+</select>
+```
 
 ### <a name="RenderingOrder">Rendering Order</a>
 
-Components that use `seapig` render their children into special placeholders determined by the schema. This means that the rendering shape is enforced internally, allowing us to pass the children into a `seapig` component in any order.
+Components that use `seapig` render their children into special placeholders determined by the schema. This means that the rendering shape can be enforced internally, allowing us to pass the children into a `seapig` component in any order.
 
 ```jsx
 /* `MyCoolSidebar` and `Content` are always rendered in the same order no matter what order they are passed in */
@@ -116,7 +125,7 @@ To reuse `<Main>` from above as an example, if we didn't pass any children with 
 </Main>
 ```
 
-The `seapig` also accumulates any unidentified children into the `rest` property.
+The `seapig` also accumulates any unidentified children into the `rest` array.
 
 ```jsx
 import seapig, { OPTIONAL, REQUIRED } from 'seapig'
@@ -200,10 +209,6 @@ const Main = props => {
 </Main>
 ```
 
-## <a name="whyseapig">Why `seapig`?</a>
-
-Sea pig stands for (**C**hildren **P**rops **I**nternal **G**etter), except the `C` is spelled phonetically.
-
 ## <a name="install">Install</a>
 
 ```bash
@@ -261,7 +266,7 @@ class Form extends Component {
 }
 ```
 
-## <a name="details">Details</a>
+## <a name="workthrough">Walkthrough</a>
 
 To demonstrate the problem that `seapig` solves, let's see how we can design the API of a header component.
 
@@ -286,7 +291,7 @@ Let's imagine a requirement comes in that each page has to render a custom menu 
 Sure, not a problem, instead of us worrying about element types and icons for each page, let's just allow them to pass that in. Of course we don't want to render blank items if nothing is provided:
 
 ```jsx
-const Header = ({ order, PageIcon }) => (
+const Header = ({ PageIcon }) => (
   <header>
     <img className="brand" src="www.mycoolsite.com/static/brand.jpg" />
     <ul className="menu">
@@ -311,7 +316,7 @@ Alright, things are getting a bit messy but still manageable.
 Headers usually show user info, assuming the user is authenticated.
 
 ```jsx
-const Header = ({ order, PageIcon, authenticated }) => (
+const Header = ({ PageIcon, authenticated }) => (
   <header>
     <img className="brand" src="www.mycoolsite.com/static/brand.jpg" />
     <ul className="menu">
@@ -333,10 +338,10 @@ Feels somewhat clunky but not terrible.
 />
 ```
 
-Cool, done, ship it. A few days go by and users now start complaining about having to navigate to `/search` to explore your site and want a search bar directly in the header. Ok, we can add another flag. Additionally there isn't a point to storing this search state within the header when other parts of the app will need it let's take that into account as well.
+Phew, done. A few days go by and users now start complaining about having to navigate to `/search` to explore your site and want a search bar directly in the header. Ok, we can add another flag. Additionally there isn't a point to storing this search state within the header when other parts of the app will need it so let's take that into account as well.
 
 ```jsx
-const Header = ({ order, PageIcon, authenticated, showSearch, searchTerm, onSearch }) => (
+const Header = ({ PageIcon, authenticated, showSearch, searchTerm, onSearch }) => (
   <header>
     <img className="brand" src="www.mycoolsite.com/static/brand.jpg" />
     <ul className="menu">
@@ -364,10 +369,9 @@ Did that mess things up?
 />
 ```
 
-You can sort of see where this is going.
+You can see where this is going.
 
-- What if we want the menu to sometimes be an `ol` rather than an `ul`?
-_ Theoretically, this header could be used in multiple sites. Surely we'll need to figure out how to generalize the hardcoded menu item texts for each site. Maybe a string array of items?
+- What if we want the menu to sometimes be an `ol` rather than an `ul`? Theoretically, this header could be used in multiple sites. Surely we'll need to figure out how to generalize the hardcoded menu item texts for each site. Maybe a string array of items?
 - What if those other sites behave the same but will never need special icons?
 - What if the `<input>` is sometimes only a numeric search? Pass a prop?
 - What if in the future we want other pages to customize the order of the internal components of `<Header>`, maybe show the `input` before the `ul` menu?
@@ -401,7 +405,7 @@ What about the custom icon per page? We can just render it on each page directly
 </Header>
 ```
 
-Ok, what about auth data? Well we could simply mark those as well. We also want to pass the `authenticated` flat to the header so it knows which items to show or not depending on the `authentication` state.
+Ok, what about auth data? Well we could just mark those as well. We also want to pass the `authenticated` flag to the header so it knows which items to show or not depending on the `authentication` state.
 
 ```jsx
 <Header authenticated={authenticated}>
@@ -445,7 +449,7 @@ Wanna disable the search input? Just do it.
 </Header>
 ```
 
-What if the `<input>` is sometimes only a numeric search? Not a problem.
+What if the `<input>` is sometimes only a numeric search? We can update the `type` property.
 
 ```jsx
 <Header authenticated={authenticated}>
@@ -460,7 +464,7 @@ What if the `<input>` is sometimes only a numeric search? Not a problem.
 </Header>
 ```
 
-What if the menu is an `ol`? Yup, can do that to.
+What if the menu is an `ol`? We can change the tag.
 
 ```jsx
 <Header authenticated={authenticated}>
@@ -490,9 +494,9 @@ Change what the items say?
 </Header>
 ```
 
-Any specific rendering change we need to make doesn't need to affect the `<Header>` component itself. `seapig` allows you to use whatever component you want.
+Any specific rendering change we need to make to one of its children doesn't need to affect the `<Header>` component itself. `seapig` allows you to use whatever component you want.
 
-Once you determine a repeatable set of logic for your site or groups of pages, you can wrap that logic into a specific `seapig` header component and be done with it. Any future requirements to any other system that uses the header won't affect you and you won't affect them.
+Once you determine a consistent set of logic for your site or groups of pages, you can wrap that logic into a specific `seapig` header component and be done with it. Any future requirements to any other system that uses the header won't affect you and you won't affect them.
 
 So how does the actual implementation of `Header` look like?
 
@@ -520,6 +524,39 @@ const Header = ({ children, authenticated }) => {
   )
 }
 ```
+
+For a more advanced use case, `seapig` works great with [`React.cloneElement`](https://reactjs.org/docs/react-api.html#cloneelement).
+
+Let's say we want to have all `auth` children add a class `'authenticated-item'` when present in the header.
+
+```jsx
+const Header = ({ children, authenticated }) => {
+  const {
+    brandChildren,
+    menuChildren,
+    authChildren
+    searchChildren,
+  } = seapig(children, {
+    brandChildren: REQUIRED,
+    menuChildren: REQUIRED,
+    authChildren: OPTIONAL
+    searchChildren: OPTIONAL,
+  });
+
+  return (
+    <header>
+      {brandChildren}
+      {menuChildren}
+      {authenticated && authChildren.map(
+        child => React.cloneElement(child, {
+          className: `${child.props.className} authenticated-item`
+        })
+      )}
+      {searchChildren}
+    </header>
+  )
+}
+```
 ## <a name="api">API</a>
 
 ```jsx
@@ -538,6 +575,6 @@ const {
 })
 ```
 
-## <a name="licence">License</a>
+## <a name="license">License</a>
 
 MIT

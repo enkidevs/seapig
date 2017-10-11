@@ -23,7 +23,7 @@ const REST = 'rest'
 
 /**
  *
- *  Utility to restrict the shape of a React component.
+ *  Utility for generalized composition of React components.
  *
  * @param {React.Children} children
  * @param {Object} schema Hash containing `seapig` schema options
@@ -31,8 +31,8 @@ const REST = 'rest'
  * @example <caption>Example usage of 🌊🐷</caption>
  *
  * const {
- *  icon, //<-- array of icon elements
- *  rest  // <-- array of all other children
+ *  iconChildren, //array of icon elements
+ *  rest          // array of all other children
  * } = seapig(children, {
  *  icon: {
  *    min: 1,
