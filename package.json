@@ -1,18 +1,21 @@
 {
   "name": "seapig",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Utility for generalized composition of React components.",
   "main": "dist/index.js",
   "jsnext:main": "src/index.js",
   "scripts": {
-    "clean": "trash dist",
-    "prebuild": "npm run clean",
     "build": "babel src --out-dir dist",
+    "clean": "trash dist",
+    "lint": "eslint . --ignore-path .gitignore",
+    "prebuild": "npm run clean",
+    "prepublish": "npm run test && npm run build",
     "pretest": "npm run lint",
-    "test": "jest",
-    "lint": "eslint . --ignore-path .gitignore && echo 'All done!'",
-    "prepublish": "npm run test && npm run build"
+    "test": "jest"
   },
+  "pre-commit": [
+    "test"
+  ],
   "homepage": "https://github.com/enkidevs/seapig.git",
   "repository": {
     "type": "git",
@@ -53,6 +56,7 @@
     "eslint-plugin-prettier": "^2.1.2",
     "eslint-plugin-react": "^7.1.0",
     "jest-cli": "^20.0.4",
+    "pre-commit": "^1.2.2",
     "prettier": "^1.5.2",
     "trash-cli": "^1.4.0"
   },
