@@ -3,30 +3,26 @@
 import { Children } from 'react'
 import invariant from 'invariant'
 
-type MINMAX = {
-  min: number,
-  max: number
+type MINMAX<MIN, MAX> = {
+  min: MIN,
+  max?: MAX
 }
 
-type MIN = {
-  min: number
-}
-
-export const OPTIONAL: MINMAX = {
+export const OPTIONAL: MINMAX<number, number> = {
   min: 0,
   max: 1
 }
 
-export const OPTIONALS: MIN = {
+export const OPTIONALS: MINMAX<number, null> = {
   min: 0
 }
 
-export const REQUIRED: MINMAX = {
+export const REQUIRED: MINMAX<number, number> = {
   min: 1,
   max: 1
 }
 
-export const REQUIREDS : MIN = {
+export const REQUIREDS : MINMAX<number, null> = {
   min: 1
 }
 
@@ -92,7 +88,7 @@ function convertPropName (propName: string) : string {
 }
 
 // define as an object, look into sealed and unsealed
-const defaultSchema: MINMAX = {
+const defaultSchema: MINMAX<number, number> = {
   min: 0,
   max: Infinity
 }
@@ -102,18 +98,20 @@ function isValidNum (num: ?number) : boolean {
   return typeof num === 'number' && !isNaN(num)
 }
 
-const validations = {
-  min: (count, min) => count >= min,
-  max: (count, max) => count <= max
+type VALIDFUNC = (number, number) => boolean;
+
+const validations: MINMAX<VALIDFUNC, VALIDFUNC> = {
+  min: (count: number, min: number): boolean => count >= min,
+  max: (count: number, max: number): boolean => count <= max
 }
 
 function assertSchemaProp (numProp: string, schemaProp: string, result: {}, schema: {}) {
-  const elementsCount = result[convertPropName(schemaProp)].length
-  const propSchema = schema[schemaProp]
+  const elementsCount: number = result[convertPropName(schemaProp)].length
+  const propSchema: {[string]: number} = schema[schemaProp]
   const limit: number = isValidNum(propSchema[numProp])
     ? propSchema[numProp]
     : defaultSchema[numProp]
-  const invariantMessageEnding = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
+  const invariantMessageEnding: string = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
   invariant(
     validations[numProp](elementsCount, limit),
     numProp === 'min'
