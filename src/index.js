@@ -3,25 +3,25 @@
 import { Children } from 'react'
 import invariant from 'invariant'
 
-export const OPTIONAL = {
+export const OPTIONAL: {min: number, max: number} = {
   min: 0,
   max: 1
 }
 
-export const OPTIONALS = {
+export const OPTIONALS: {min: number} = {
   min: 0
 }
 
-export const REQUIRED = {
+export const REQUIRED: {min: number, max: number} = {
   min: 1,
   max: 1
 }
 
-export const REQUIREDS = {
+export const REQUIREDS : {min: number} = {
   min: 1
 }
 
-const REST = 'rest'
+const REST: string = 'rest'
 
 /**
  *
@@ -45,12 +45,12 @@ const REST = 'rest'
  * @returns {Object} Object hash where each key is one of the given props whose
  * value is a react component matching that prop
  */
-export default function seapig (children, schema = {}) {
-  invariant(schema && typeof schema === 'object', 'schema must be an object')
+
+export default function seapig (children: Array<{}>, schema: {} = {}) : {} {
 
   // extract schema and initialize the result
-  const propNames = Object.keys(schema)
-  const result = propNames.reduce(
+  const propNames: Array<string> = Object.keys(schema)
+  const result: {[string]: Array<{}>} = propNames.reduce(
     (r, propName) => {
       r[convertPropName(propName)] = []
       return r
@@ -65,7 +65,7 @@ export default function seapig (children, schema = {}) {
     if (!child) {
       return
     }
-    const propName = propNames.find(p => child.props[p]) || REST
+    const propName: string = propNames.find(p => child.props[p]) || REST
     result[propName === REST ? propName : convertPropName(propName)].push(child)
   })
 
@@ -78,16 +78,18 @@ export default function seapig (children, schema = {}) {
   return result
 }
 
-function convertPropName (propName) {
+function convertPropName (propName: string) : string {
   return `${propName}Children`
 }
 
-const defaultSchema = {
+// define as an object, look into sealed and unsealed
+const defaultSchema: {min: number, max: number} = {
   min: 0,
   max: Infinity
 }
 
-function isValidNum (num) {
+
+function isValidNum (num: ?number) : boolean {
   return typeof num === 'number' && !isNaN(num)
 }
 
@@ -96,10 +98,10 @@ const validations = {
   max: (count, max) => count <= max
 }
 
-function assertSchemaProp (numProp, schemaProp, result, schema) {
+function assertSchemaProp (numProp: string, schemaProp: string, result: {}, schema: {}) {
   const elementsCount = result[convertPropName(schemaProp)].length
   const propSchema = schema[schemaProp]
-  const limit = isValidNum(propSchema[numProp])
+  const limit: number = isValidNum(propSchema[numProp])
     ? propSchema[numProp]
     : defaultSchema[numProp]
   const invariantMessageEnding = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
