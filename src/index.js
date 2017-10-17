@@ -3,21 +3,30 @@
 import { Children } from 'react'
 import invariant from 'invariant'
 
-export const OPTIONAL: {min: number, max: number} = {
+type MINMAX = {
+  min: number,
+  max: number
+}
+
+type MIN = {
+  min: number
+}
+
+export const OPTIONAL: MINMAX = {
   min: 0,
   max: 1
 }
 
-export const OPTIONALS: {min: number} = {
+export const OPTIONALS: MIN = {
   min: 0
 }
 
-export const REQUIRED: {min: number, max: number} = {
+export const REQUIRED: MINMAX = {
   min: 1,
   max: 1
 }
 
-export const REQUIREDS : {min: number} = {
+export const REQUIREDS : MIN = {
   min: 1
 }
 
@@ -83,7 +92,7 @@ function convertPropName (propName: string) : string {
 }
 
 // define as an object, look into sealed and unsealed
-const defaultSchema: {min: number, max: number} = {
+const defaultSchema: MINMAX = {
   min: 0,
   max: Infinity
 }
