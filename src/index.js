@@ -1,3 +1,5 @@
+// @flow
+
 import { Children } from 'react'
 import invariant from 'invariant'
 
