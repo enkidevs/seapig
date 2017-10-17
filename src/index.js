@@ -42,11 +42,11 @@ const REST: string = 'rest'
  *  }
  * })
  *
- * @returns {Object} Object hash where each key is one of the given props whose
- * value is a react component matching that prop
+ * @returns {Object} Object hash where each key is one of the given props concatenated with 'Children' and each value is a react component matching that prop.
  */
 
 export default function seapig (children: Array<{}>, schema: {} = {}) : {} {
+  invariant(schema && typeof schema === 'object', 'schema must be an object')
 
   // extract schema and initialize the result
   const propNames: Array<string> = Object.keys(schema)

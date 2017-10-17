@@ -108,6 +108,6 @@ describe('seapig', () => {
   test('should throw for invalid schema', () => {
     expect(() => {
       seapig(children, null)
-    }).toThrow(TypeError)
+    }).toThrow('schema must be an object')
   })
 })
