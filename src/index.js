@@ -1,28 +1,35 @@
 // @flow
 
+import type { Node, Element } from 'react'
 import { Children } from 'react'
 import invariant from 'invariant'
 
-type MINMAX<MIN, MAX> = {
-  min: MIN,
-  max?: MAX
+
+type SchemaProp = 'min' | 'max'
+
+type Schema = {
+  [SchemaProp]: number
 }
 
-export const OPTIONAL: MINMAX<number, number> = {
+type SeaPigResult =  {
+  [string]: Array<Element<any>>
+}
+
+export const OPTIONAL: Schema = {
   min: 0,
   max: 1
 }
 
-export const OPTIONALS: MINMAX<number, null> = {
+export const OPTIONALS: Schema = {
   min: 0
 }
 
-export const REQUIRED: MINMAX<number, number> = {
+export const REQUIRED: Schema = {
   min: 1,
   max: 1
 }
 
-export const REQUIREDS : MINMAX<number, null> = {
+export const REQUIREDS : Schema = {
   min: 1
 }
 
@@ -50,12 +57,12 @@ const REST: string = 'rest'
  * @returns {Object} Object hash where each key is one of the given props concatenated with 'Children' and each value is a react component matching that prop.
  */
 
-export default function seapig (children: Array<{}>, schema: {} = {}) : {} {
+export default function seapig (children: Node, schema: Schema = {}) : SeaPigResult {
   invariant(schema && typeof schema === 'object', 'schema must be an object')
 
   // extract schema and initialize the result
   const propNames: Array<string> = Object.keys(schema)
-  const result: {[string]: Array<{}>} = propNames.reduce(
+  const result: SeaPigResult = propNames.reduce(
     (r, propName) => {
       r[convertPropName(propName)] = []
       return r
@@ -87,8 +94,7 @@ function convertPropName (propName: string) : string {
   return `${propName}Children`
 }
 
-// define as an object, look into sealed and unsealed
-const defaultSchema: MINMAX<number, number> = {
+const defaultSchema: Schema = {
   min: 0,
   max: Infinity
 }
@@ -98,23 +104,26 @@ function isValidNum (num: ?number) : boolean {
   return typeof num === 'number' && !isNaN(num)
 }
 
-type VALIDFUNC = (number, number) => boolean;
+type ValidationFunction = (number, number) => boolean;
 
-const validations: MINMAX<VALIDFUNC, VALIDFUNC> = {
+type ValidationFunctions = {
+  [SchemaProp]: ValidationFunction
+}
+const validations: ValidationFunctions = {
   min: (count: number, min: number): boolean => count >= min,
   max: (count: number, max: number): boolean => count <= max
 }
 
-function assertSchemaProp (numProp: string, schemaProp: string, result: {}, schema: {}) {
-  const elementsCount: number = result[convertPropName(schemaProp)].length
-  const propSchema: {[string]: number} = schema[schemaProp]
-  const limit: number = isValidNum(propSchema[numProp])
-    ? propSchema[numProp]
-    : defaultSchema[numProp]
-  const invariantMessageEnding: string = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
+function assertSchemaProp (schemaProp: SchemaProp, prop: string,  result: SeaPigResult, schema: Schema) {
+  const elementsCount: number = result[convertPropName(prop)].length
+  const propSchema: Schema = schema[prop]
+  const limit: number = isValidNum(propSchema[schemaProp])
+    ? propSchema[schemaProp]
+    : defaultSchema[schemaProp]
+  const invariantMessageEnding: string = `${limit} \`${prop}\` element${limit !== 1 ? 's' : ''}`
   invariant(
-    validations[numProp](elementsCount, limit),
-    numProp === 'min'
+    validations[schemaProp](elementsCount, limit),
+    schemaProp === 'min'
       ? `Must have at least ${invariantMessageEnding}`
       : `Cannot have more than ${invariantMessageEnding}`
   )
