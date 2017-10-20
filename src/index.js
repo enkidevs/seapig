@@ -1,26 +1,42 @@
-import { Children } from 'react'
-import invariant from 'invariant'
+// @flow
 
-export const OPTIONAL = {
+import type { Node, Element } from "react";
+import { Children } from "react";
+import invariant from "invariant";
+
+type ValidationProp = "min" | "max";
+
+type ValidationSchema = {
+  [ValidationProp]: number
+};
+
+type SeaPigResult = {
+  [string]: Array<Element<any>>
+};
+
+export const OPTIONAL: ValidationSchema = {
   min: 0,
   max: 1
-}
+};
 
-export const OPTIONALS = {
+export const OPTIONALS: ValidationSchema = {
   min: 0
-}
+};
 
-export const REQUIRED = {
+export const REQUIRED: ValidationSchema = {
   min: 1,
   max: 1
-}
+};
 
-export const REQUIREDS = {
+export const REQUIREDS: ValidationSchema = {
   min: 1
-}
+};
 
-const REST = 'rest'
+const REST: string = "rest";
 
+type SeaPigSchema = {
+  [string]: ValidationSchema
+};
 /**
  *
  *  Utility for generalized composition of React components.
@@ -40,71 +56,78 @@ const REST = 'rest'
  *  }
  * })
  *
- * @returns {Object} Object hash where each key is one of the given props whose
- * value is a react component matching that prop
+ * @returns {Object} Object hash where each key is one of the given props concatenated with 'Children' and each value is a react component matching that prop.
  */
-export default function seapig (children, schema = {}) {
-  invariant(schema && typeof schema === 'object', 'schema must be an object')
+
+export default function seapig(children: Node, schema: SeaPigSchema = {}): SeaPigResult {
+  invariant(schema && typeof schema === "object", "schema must be an object");
 
   // extract schema and initialize the result
-  const propNames = Object.keys(schema)
-  const result = propNames.reduce(
+  const propNames: Array<string> = Object.keys(schema);
+  const result: SeaPigResult = propNames.reduce(
     (r, propName) => {
-      r[convertPropName(propName)] = []
-      return r
+      r[convertPropName(propName)] = [];
+      return r;
     },
     {
       [REST]: []
     }
-  )
+  );
 
   // build the result
   Children.toArray(children).forEach(child => {
     if (!child) {
-      return
+      return;
     }
-    const propName = propNames.find(p => child.props[p]) || REST
-    result[propName === REST ? propName : convertPropName(propName)].push(child)
-  })
+    const propName: string = propNames.find(p => child.props[p]) || REST;
+    result[propName === REST ? propName : convertPropName(propName)].push(child);
+  });
 
   // validate the result
   propNames.forEach(propName => {
-    assertSchemaProp('min', propName, result, schema)
-    assertSchemaProp('max', propName, result, schema)
-  })
+    assertSchemaProp("min", propName, result, schema);
+    assertSchemaProp("max", propName, result, schema);
+  });
 
-  return result
+  return result;
 }
 
-function convertPropName (propName) {
-  return `${propName}Children`
+function convertPropName(propName: string): string {
+  return `${propName}Children`;
 }
 
-const defaultSchema = {
+const defaultValidationSchema: ValidationSchema = {
   min: 0,
   max: Infinity
+};
+
+function isValidNum(num: ?number): boolean {
+  return typeof num === "number" && !isNaN(num);
 }
 
-function isValidNum (num) {
-  return typeof num === 'number' && !isNaN(num)
-}
+type ValidationFunctions = { [ValidationProp]: (number, number) => boolean };
 
-const validations = {
-  min: (count, min) => count >= min,
-  max: (count, max) => count <= max
-}
+const validations: ValidationFunctions = {
+  min: (count: number, min: number): boolean => count >= min,
+  max: (count: number, max: number): boolean => count <= max
+};
 
-function assertSchemaProp (numProp, schemaProp, result, schema) {
-  const elementsCount = result[convertPropName(schemaProp)].length
-  const propSchema = schema[schemaProp]
-  const limit = isValidNum(propSchema[numProp])
-    ? propSchema[numProp]
-    : defaultSchema[numProp]
-  const invariantMessageEnding = `${limit} \`${schemaProp}\` element${limit !== 1 ? 's' : ''}`
+function assertSchemaProp(
+  validationProp: ValidationProp,
+  schemaProp: string,
+  result: SeaPigResult,
+  schema: SeaPigSchema
+) {
+  const elementsCount: number = result[convertPropName(schemaProp)].length;
+  const validationSchema: ValidationSchema = schema[schemaProp];
+  const limit: number = isValidNum(validationSchema[validationProp])
+    ? validationSchema[validationProp]
+    : defaultValidationSchema[validationProp];
+  const invariantMessageEnding: string = `${limit} \`${schemaProp}\` element${limit !== 1 ? "s" : ""}`;
   invariant(
-    validations[numProp](elementsCount, limit),
-    numProp === 'min'
+    validations[validationProp](elementsCount, limit),
+    validationProp === "min"
       ? `Must have at least ${invariantMessageEnding}`
       : `Cannot have more than ${invariantMessageEnding}`
-  )
+  );
 }
