@@ -508,10 +508,10 @@ const Header = ({ children, authenticated }) => {
     authChildren
     searchChildren,
   } = seapig(children, {
-    brandChildren: REQUIRED,
-    menuChildren: REQUIRED,
-    authChildren: OPTIONAL
-    searchChildren: OPTIONAL,
+    brand: REQUIRED,
+    menu: REQUIRED,
+    auth: OPTIONAL
+    search: OPTIONAL,
   });
 
   return (
@@ -537,10 +537,10 @@ const Header = ({ children, authenticated }) => {
     authChildren
     searchChildren,
   } = seapig(children, {
-    brandChildren: REQUIRED,
-    menuChildren: REQUIRED,
-    authChildren: OPTIONAL
-    searchChildren: OPTIONAL,
+    brand: REQUIRED,
+    menu: REQUIRED,
+    auth: OPTIONAL
+    search: OPTIONAL,
   });
 
   return (
