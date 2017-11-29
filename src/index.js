@@ -6,8 +6,14 @@ import invariant from "invariant";
 
 type ValidationProp = "min" | "max";
 
+type ValidationFunctions = { [ValidationProp]: (number, number) => boolean };
+
 type ValidationSchema = {
   [ValidationProp]: number
+};
+
+type SeaPigSchema = {
+  [string]: ValidationSchema
 };
 
 type SeaPigResult = {
@@ -33,10 +39,6 @@ export const REQUIREDS: ValidationSchema = {
 };
 
 const REST: string = "rest";
-
-type SeaPigSchema = {
-  [string]: ValidationSchema
-};
 /**
  *
  *  Utility for generalized composition of React components.
@@ -104,8 +106,6 @@ const defaultValidationSchema: ValidationSchema = {
 function isValidNum(num: ?number): boolean {
   return typeof num === "number" && !isNaN(num);
 }
-
-type ValidationFunctions = { [ValidationProp]: (number, number) => boolean };
 
 const validations: ValidationFunctions = {
   min: (count: number, min: number): boolean => count >= min,
