@@ -119,7 +119,7 @@ A `seapig` component ensures that all children match the provided schema.
 To reuse `<Main>` from above as an example, if we didn't pass any children with the `'content'` prop, `seapig` would throw:
 
 ```jsx
-// The code bellow would throw a "Must have at least 1 `content` element" error
+// The code below would throw a "Must have at least 1 `content` element" error
 <Main>
   <MyCoolSidebar sidebar />
 </Main>
