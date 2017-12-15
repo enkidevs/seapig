@@ -3,10 +3,13 @@
   "version": "0.3.1",
   "description": "Utility for generalized composition of React components.",
   "main": "dist/index.js",
-  "jsnext:main": "src/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
   "scripts": {
-    "build": "babel src --out-dir dist",
-    "clean": "trash dist",
+    "build": "npm run build:es && npm run build:cjs",
+    "build:es": "BABEL_ENV=es babel src --out-dir es",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir dist",
+    "clean": "trash dist es",
     "lint": "eslint . --ignore-path .gitignore",
     "prebuild": "npm run clean",
     "prepublish": "npm run test && npm run build",
@@ -37,9 +40,8 @@
     "javascript"
   ],
   "files": [
-    "dist",
-    "src",
-    "!**/__tests__/**"
+    "es",
+    "dist"
   ],
   "author": "Nemanja Stojanovic <me@nem035.com>",
   "license": "MIT",
