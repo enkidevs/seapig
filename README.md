@@ -50,11 +50,11 @@ This is where compound components come to the rescue.
 
 A compound component encloses the state and behavior for a group of components but still gives the rendering control for its variable parts back to the external user. When using it, you only need to worry about the actual parts that are different.
 
-A concrete example of a compound component on the Web today is the `<select>` element. It allows us to externally specify it's rendering structure with `<option>` and `<optiongroup>` elements but hides away all the complexity of rendering those in a certain way or handling/delegating events.
+A concrete example of a compound component on the Web today is the `<select>` element. It allows us to externally specify its rendering structure with `<option>` and `<optiongroup>` elements but hides away all the complexity of rendering those in a certain way or handling/delegating events.
 
 > If you're interested in more examples of compound components, [Ryan Florence](https://twitter.com/ryanflorence) has a [great talk](https://www.youtube.com/watch?v=hEGg-3pIHlE) on this topic.
 
-Good ol' `seapig` twists the concept of compound components a bit by using designate props to determine distinct parts of our component group, rather than enforcing usage of specific components. Furthermore, it can restrict a consistent shape of our structure by enforcing [**Rendering Order**](#RenderingOrder) and [**Child Presence**](#ChildPresence) using a schema object.
+Good ol' `seapig` twists the concept of compound components a bit by using designated props to determine distinct parts of our component group, rather than enforcing usage of specific components. Furthermore, it can restrict a consistent shape of our structure by enforcing [**Rendering Order**](#RenderingOrder) and [**Child Presence**](#ChildPresence) using a schema object.
 
 Imagine if `<select>` allowed you to pass anything as its option but still handled all the logic and things like event propagation?
 
@@ -240,8 +240,8 @@ class Button extends Component {
 
     return (
       <button>
-        {icon.length && <span className="pull-left">{icon}</span>}
-        {label}
+        {iconChildren.length && <span className="pull-left">{iconChildren}</span>}
+        {labelChildren}
       </button>
     )
   }
