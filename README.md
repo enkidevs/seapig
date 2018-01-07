@@ -415,7 +415,7 @@ Ok, what about auth data? Well we could just mark those as well. We also want to
     <li>About</li>
     <li><FontAwesome name="star" /></li>
   </ul>
-  <UserInfo auth> {/* Mark restricted menu items */}
+  <UserInfo auth> {/* Mark restricted menu items */} </UserInfo>
 </Header>
 ```
 
@@ -429,7 +429,7 @@ What about search?
     <li>About</li>
     <li><FontAwesome name="star" /></li>
   </ul>
-  <UserInfo auth>
+  <UserInfo auth />
   <input search type="search" value={this.state.searchTerm} onChange={this.handleSearch} />
 </Header>
 ```
@@ -444,7 +444,7 @@ Wanna disable the search input? Just do it.
     <li>About</li>
     <li><FontAwesome name="star" /></li>
   </ul>
-  <UserInfo auth>
+  <UserInfo auth />
   <input search type="search" disabled={this.state.isSearching} value={this.state.searchTerm} onChange={this.handleSearch} />
 </Header>
 ```
@@ -459,7 +459,7 @@ What if the `<input>` is sometimes only a numeric search? We can update the `typ
     <li>About</li>
     <li><FontAwesome name="star" /></li>
   </ul>
-  <UserInfo auth>
+  <UserInfo auth />
   <input search type="number" disabled={this.state.isSearching} value={this.state.searchTerm} onChange={this.handleSearch} />
 </Header>
 ```
@@ -474,7 +474,7 @@ What if the menu is an `ol`? We can change the tag.
     <li>About</li>
     <li><FontAwesome name="star" /></li>
   </ol>
-  <UserInfo auth>
+  <UserInfo auth />
   <input search type="search" disabled={this.state.isSearching} value={this.state.searchTerm} onChange={this.handleSearch} />
 </Header>
 ```
@@ -489,7 +489,7 @@ Change what the items say?
     <li>ℹ️</li>
     <li><FontAwesome name="star" /></li>
   </ul>
-  <UserInfo auth>
+  <UserInfo auth />
   <input search type="search" disabled={this.state.isSearching} value={this.state.searchTerm} onChange={this.handleSearch} />
 </Header>
 ```
