@@ -562,12 +562,16 @@ const Header = ({ children, authenticated }) => {
 ```jsx
 const {
   iconChildren,
+  iconsChildren,
   labelChildren,
+  labelsChildren,
   imageChildren,
   rest, // array of children not matching any of the schema props
 } = seapig(children, {
-  icon: OPTIONAL, // use OPTIONAL to specify an optional child prop
-  label: REQUIREDS, // use REQUIREDS to specify at least one required child prop,
+  icon: OPTIONAL, // use OPTIONAL to specify only one optional child prop
+  icons: OPTIONALS, // use OPTIONALS to specify any amount of optional child props
+  label: REQUIRED, // use REQUIRED to specify only one required child prop,
+  labels: REQUIREDS, // use REQUIREDS to specify at least one required child prop,
   image: { // pass an object with `min` and/or `max`
     min: 1, // default is `0` if only `max` is specified
     max: 2  // default is `Infinity` if only `min` is specified
