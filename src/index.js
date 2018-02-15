@@ -77,12 +77,14 @@ export default function seapig(children: Node, schema: SeaPigSchema = {}): SeaPi
   );
 
   // build the result
-  Children.toArray(children).forEach(child => {
+  Children.toArray(children).forEach((child, i) => {
     if (!child) {
       return;
     }
-    const propName: string = propNames.find(p => child.props[p]) || REST;
-    result[propName === REST ? propName : convertPropName(propName)].push(child);
+    const matchingPropNames: Array<string> = propNames.filter(p => child.props[p]);
+    invariant(matchingPropNames.length <= 1, `expected at most 1 seapig prop per element but found ${matchingPropNames.length} (${matchingPropNames.join(', ')}) for child at index ${i}`);
+    const propName: ?string = matchingPropNames[0];
+    result[propName ? convertPropName(propName) : REST].push(child);
   });
 
   // validate the result
