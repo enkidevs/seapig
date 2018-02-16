@@ -1,6 +1,6 @@
 {
   "name": "seapig",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Utility for generalized composition of React components.",
   "main": "dist/index.js",
   "module": "es/index.js",
@@ -17,9 +17,7 @@
     "test": "jest",
     "flow": "flow"
   },
-  "pre-commit": [
-    "test"
-  ],
+  "pre-commit": ["test"],
   "homepage": "https://github.com/enkidevs/seapig.git",
   "repository": {
     "type": "git",
@@ -39,10 +37,7 @@
     "shape",
     "javascript"
   ],
-  "files": [
-    "es",
-    "dist"
-  ],
+  "files": ["es", "dist"],
   "author": "Nemanja Stojanovic <me@nem035.com>",
   "license": "MIT",
   "devDependencies": {
