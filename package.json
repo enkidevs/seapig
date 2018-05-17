@@ -61,7 +61,9 @@
     "trash-cli": "^1.4.0"
   },
   "dependencies": {
-    "invariant": "^2.2.1",
-    "react": "^15.6.1"
+    "invariant": "*"
+  },
+  "peerDependencies": {
+    "react": ">=15"
   }
 }
