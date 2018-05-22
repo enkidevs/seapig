@@ -77,7 +77,7 @@ export default function seapig(children: Node, schema: SeaPigSchema = {}): SeaPi
   );
 
   // build the result
-  Children.toArray(children).forEach((child, i) => {
+  Children.forEach(children, (child, i) => {
     if (!child) {
       return;
     }
