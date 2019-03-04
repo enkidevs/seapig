@@ -1,0 +1,14 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/seapig
+    docker:
+      - image: circleci/node:8.10
+    steps:
+      - checkout
+      - run:
+          name: Install
+          command: npm install
+      - run:
+          name: Checks
+          command: npm run prepublish
