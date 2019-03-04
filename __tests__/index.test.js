@@ -1,5 +1,5 @@
 /* globals describe test expect */
-import React, { Children } from 'react'
+import React from 'react'
 import seapig, { OPTIONAL, OPTIONALS, REQUIRED, REQUIREDS } from '../src/index'
 
 // test data
@@ -12,11 +12,7 @@ const d = <div />
 const children = [a, b, c, d]
 const childrenWithProp = [a, b]
 const childrenWithoutProp = [c, d]
-const childrenReact = Children.toArray(children)
 const childrenWithSingleChildWithProp = children.slice(1)
-const childrenWithSingleChildWithPropReact = Children.toArray(
-  childrenWithSingleChildWithProp
-)
 
 // error messages
 const ERROR_MSG_ENDING_REGEX = `\\d \`${PROP}\` element(?:s|$)?`
@@ -35,8 +31,8 @@ describe('seapig', () => {
           [PROP]: OPTIONAL
         })
       ).toEqual({
-        [SEAPIG_PROP]: [childrenWithSingleChildWithPropReact[0]],
-        rest: childrenWithSingleChildWithPropReact.slice(1)
+        [SEAPIG_PROP]: [childrenWithSingleChildWithProp[0]],
+        rest: childrenWithSingleChildWithProp.slice(1)
       })
     })
     test('for OPTIONALS', () => {
@@ -45,8 +41,8 @@ describe('seapig', () => {
           [PROP]: OPTIONALS
         })
       ).toEqual({
-        [SEAPIG_PROP]: childrenReact.slice(0, 2),
-        rest: childrenReact.slice(2)
+        [SEAPIG_PROP]: children.slice(0, 2),
+        rest: children.slice(2)
       })
     })
     test('for REQUIRED', () => {
@@ -55,8 +51,8 @@ describe('seapig', () => {
           [PROP]: REQUIRED
         })
       ).toEqual({
-        [SEAPIG_PROP]: [childrenWithSingleChildWithPropReact[0]],
-        rest: childrenWithSingleChildWithPropReact.slice(1)
+        [SEAPIG_PROP]: [childrenWithSingleChildWithProp[0]],
+        rest: childrenWithSingleChildWithProp.slice(1)
       })
     })
     test('for REQUIREDS', () => {
@@ -65,8 +61,8 @@ describe('seapig', () => {
           [PROP]: REQUIREDS
         })
       ).toEqual({
-        [SEAPIG_PROP]: childrenReact.slice(0, 2),
-        rest: childrenReact.slice(2)
+        [SEAPIG_PROP]: children.slice(0, 2),
+        rest: children.slice(2)
       })
     })
   })
@@ -97,7 +93,7 @@ describe('seapig', () => {
   })
   test('should return all children as `rest` object for no schema', () => {
     expect(seapig(children)).toEqual({
-      rest: childrenReact
+      rest: children
     })
   })
   test('should return empty array under `rest` for invalid children', () => {

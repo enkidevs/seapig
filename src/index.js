@@ -106,7 +106,7 @@ const defaultValidationSchema: ValidationSchema = {
 };
 
 function isValidNum(num: ?number): boolean {
-  return typeof num === "number" && !isNaN(num);
+  return typeof num === "number" && !Number.isNaN(num);
 }
 
 const validations: ValidationFunctions = {
