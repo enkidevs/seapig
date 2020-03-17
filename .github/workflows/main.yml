@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    name: Unit tests, lint and builds    
+    timeout-minutes: 30
+    runs-on: ubuntu-latest    
+    steps:
+      - name: Checking out repo
+        uses: actions/checkout@v1
+      - name: "Install modules"
+        run: npm install
+      - name: "Lint"
+        run: npm run lint
+      - name: "Test"
+        run: npm run test
+      - name: "Build"
+        run: npm run build
