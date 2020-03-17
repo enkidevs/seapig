@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "npm run build:es && npm run build:cjs",
     "build:es": "BABEL_ENV=es babel src --out-dir es",
