@@ -16,7 +16,7 @@ declare module 'seapig' {
   }
 
   export default function seapig(
-    children: ReactElement,
+    children: ReactElement[],
     schema: Schema,
   ): Result;
 
