@@ -8,6 +8,8 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest    
     steps:
+      - name: Checking out repo
+        uses: actions/checkout@v1
       - name: "Install modules"
         run: npm install
       - name: "Lint"
