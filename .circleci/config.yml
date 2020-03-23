@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install
-          command: npm install
+          command: npm ci
       - run:
           name: Checks
           command: npm run prepublish
