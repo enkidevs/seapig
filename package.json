@@ -42,7 +42,8 @@
   ],
   "files": [
     "es",
-    "dist"
+    "dist",
+    "index.d.ts"
   ],
   "author": "Nemanja Stojanovic <me@nem035.com>",
   "license": "MIT",
