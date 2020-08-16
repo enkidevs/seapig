@@ -1,5 +1,5 @@
 declare module 'seapig' {
-  import { ReactElement } from 'react';
+  import { ReactNode } from 'react';
 
   interface ValidationConfiguration {
     min?: number;
@@ -11,13 +11,13 @@ declare module 'seapig' {
   }
 
   interface Result {
-    [key: string]: ReactElement[];
-    rest: ReactElement[];
+    [key: string]: ReactNode;
+    rest: ReactNode;
   }
 
   export default function seapig(
-    children: ReactElement[],
-    schema: Schema,
+    children?: ReactNode | null,
+    schema?: Schema,
   ): Result;
 
   export const OPTIONAL: ValidationConfiguration;
