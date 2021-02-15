@@ -1,6 +1,6 @@
 {
   "name": "seapig",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Utility for generalized composition of React components.",
   "main": "dist/index.js",
   "module": "es/index.js",
