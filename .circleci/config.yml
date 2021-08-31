@@ -1,7 +1,7 @@
 version: 2
 
 workflows:
-  build:
+  build_workflow:
     jobs:
       - build
   hourly:
