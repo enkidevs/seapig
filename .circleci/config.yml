@@ -4,16 +4,7 @@ workflows:
   build_workflow:
     jobs:
       - build
-  hourly:
-    jobs:
-      - build
-    triggers:
-      - schedule:
-          cron: 0 0 17/1 ? * * *
-          filters:
-            branches:
-              only:
-                - master
+  
 
 jobs:
   build:
